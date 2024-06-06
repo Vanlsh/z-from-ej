@@ -11,8 +11,6 @@ const parseReport = (item) => {
 
   const infoReport = getReportInfo(storm);
 
-  console.log({ obig: paymentSum, storm: returnedSun, ...infoReport });
-
   return { obig: paymentSum, storm: returnedSun, ...infoReport };
 };
 
@@ -69,7 +67,7 @@ const getSums = (item) => {
   const regexVatObigB = /ПДВ Б = \d{1,2},\d{2}%\s+([\d,]+)/;
   const regexVatObigC = /ПДВ В = \d{1,2},\d{2}%\s+([\d,]+)/;
   const regexVatObigD = /ПДВ Г = \d{1,2},\d{2}%\s+([\d,]+)/;
-  const regexVatObigE = /ПДВ Д = \d{1,2},\d{2}%\s+([\d,]+)/;
+  const regexVatObigE = /ПДВ Д = Неопод.\s+([\d,]+)/;
 
   const vatA = parseObig(item.match(regexVatObigA));
   const vatB = parseObig(item.match(regexVatObigB));
@@ -77,8 +75,10 @@ const getSums = (item) => {
   const vatD = parseObig(item.match(regexVatObigD));
   const vatE = parseObig(item.match(regexVatObigE));
 
-  const regexVatObigM = /ЗБIР М\/([*+]|Акциз) = \d{1,2},\d{2}%\s+([\d,]+)/;
-  const regexVatObigH = /ЗБIР Н\/([*+]|Акциз) = \d{1,2},\d{2}%\s+([\d,]+)/;
+  const regexVatObigM =
+    /ЗБIР М\/([*+]|Акциз)[АБВГД]\s+=\s+\d{1,2},\d{2}%\s+([\d,]+)/;
+  const regexVatObigH =
+    /ЗБIР Н\/([*+]|Акциз)[АБВГД]\s+=\s+\d{1,2},\d{2}%\s+([\d,]+)/;
 
   const vatM = parseObig(item.match(regexVatObigM));
   const vatH = parseObig(item.match(regexVatObigH));
@@ -106,10 +106,12 @@ const getSums = (item) => {
   };
 };
 
+// export
+
 const getReportsData = (content) => {
-  console.log("test");
   const reports = splitReport(content);
   const reportsData = reports.map(parseReport);
+  return reportsData;
 };
 
 module.exports = {
